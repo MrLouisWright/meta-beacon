@@ -1,0 +1,47 @@
+name: 'meta-beacon'
+description: 'Check titles, meta descriptions, Open Graph and Twitter card tags in a built static site'
+author: 'Louis Wright'
+branding: { icon: 'tag', color: 'blue' }
+inputs:
+  path: { description: 'Built site directory (e.g. dist, public, _site)', default: '.' }
+  base-url: { description: 'Public URL of the site, e.g. https://example.com', default: '' }
+  fail-on: { description: 'critical | high | medium | low | info | none', default: 'high' }
+  config: { description: 'Path to JSON config file', default: '' }
+  sarif: { description: 'Write SARIF to this path', default: '' }
+  json: { description: 'Write JSON report to this path', default: '' }
+  job-summary: { description: 'Write the Markdown report to the job summary (true/false)', default: 'true' }
+  args: { description: 'Extra CLI arguments', default: '' }
+outputs:
+  markdown-file: { description: 'Path of the Markdown report', value: '${{ steps.run.outputs.markdown-file }}' }
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with: { node-version: '20' }
+    - id: run
+      shell: bash
+      env:
+        MB_PATH: ${{ inputs.path }}
+        MB_BASE_URL: ${{ inputs.base-url }}
+        MB_FAIL_ON: ${{ inputs.fail-on }}
+        MB_CONFIG: ${{ inputs.config }}
+        MB_SARIF: ${{ inputs.sarif }}
+        MB_JSON: ${{ inputs.json }}
+        MB_SUMMARY: ${{ inputs.job-summary }}
+        MB_ARGS: ${{ inputs.args }}
+        MB_BIN: ${{ github.action_path }}/bin/meta-beacon.js
+      run: |
+        md="$RUNNER_TEMP/meta-beacon.md"
+        args=("$MB_PATH" --fail-on "$MB_FAIL_ON" --markdown "$md")
+        [ -n "$MB_BASE_URL" ] && args+=(--base-url "$MB_BASE_URL")
+        [ -n "$MB_CONFIG" ] && args+=(--config "$MB_CONFIG")
+        [ -n "$MB_SARIF" ] && args+=(--sarif "$MB_SARIF")
+        [ -n "$MB_JSON" ] && args+=(--json "$MB_JSON")
+        set +e
+        # shellcheck disable=SC2086
+        node "$MB_BIN" "${args[@]}" $MB_ARGS
+        code=$?
+        set -e
+        echo "markdown-file=$md" >> "$GITHUB_OUTPUT"
+        if [ "$MB_SUMMARY" = "true" ] && [ -f "$md" ]; then cat "$md" >> "$GITHUB_STEP_SUMMARY"; fi
+        exit $code
