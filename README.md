@@ -1,5 +1,7 @@
 # meta-beacon
 
+[![npm version](https://img.shields.io/npm/v/meta-beacon.svg)](https://www.npmjs.com/package/meta-beacon) [![CI](https://github.com/MrLouisWright/meta-beacon/actions/workflows/ci.yml/badge.svg)](https://github.com/MrLouisWright/meta-beacon/actions/workflows/ci.yml) [![Node](https://img.shields.io/node/v/meta-beacon.svg)](https://nodejs.org) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > Audit titles, meta descriptions, Open Graph and Twitter/X cards across a built static site.
 
 Every page needs a good title, a description and a share preview, and they break in small ways. A template change drops `og:image` from blog posts. A CMS emits two `<title>` tags. Someone ships `og:image="/img/share.png"`, but scrapers don't resolve relative URLs, so links shared on LinkedIn show no image. The share image is an SVG that Facebook won't render, or 300 px wide when 1200×630 is expected. `meta-beacon` reads every page in your build output and reports each of these problems with the file, line, severity and a **concrete fix**. It opens the real image files to check their format and dimensions.
