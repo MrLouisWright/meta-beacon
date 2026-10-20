@@ -1,6 +1,6 @@
 {
   "name": "meta-beacon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Audit titles, meta descriptions, Open Graph and Twitter/X card tags across a built static site: presence, duplicates in the head, length, absolute URLs and real og:image files (dimensions, format, size). Text/JSON/SARIF/Markdown, allowlist with expiry, GitHub Action. Zero deps.",
   "type": "module",
   "main": "./src/index.js",
