@@ -88,7 +88,7 @@ MEDIUM   index.html:5 2 <title> elements; browsers and crawlers use only the fir
 ## Options
 
 ```text
-meta-beacon 1.0.0 — titles, meta descriptions, Open Graph and Twitter cards for static sites
+meta-beacon 1.0.1 — titles, meta descriptions, Open Graph and Twitter cards for static sites
 
 Usage: meta-beacon [site-dir] [options]
 
@@ -181,12 +181,20 @@ The action runs the bundled CLI with Node 20; it has no dependencies to install.
 
 ## Library
 
+Install it in your project first:
+
+```bash
+npm install --save-dev meta-beacon
+```
+
 ```js
 import { check, imageInfo } from 'meta-beacon';
 const report = check('dist', { baseUrl: 'https://example.com' });
 for (const f of report.findings) console.log(f.rule, f.file, f.message);
 imageInfo('dist/img/og.png'); // { format: 'png', width: 1200, height: 630, bytes: 48213 }
 ```
+
+The package is ESM-only (there is no CommonJS build): use `import`, or `await import("meta-beacon")` from CommonJS.
 
 Types are included.
 
